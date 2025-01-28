@@ -114,8 +114,8 @@ async def process_receipt(receipt: Receipt):
         total = float(receipt.total)
         items_total = sum(float(item.price) for item in receipt.items)
         
-        # Validate total matches sum of items 
-        if abs(total - items_total) != 0.00:
+        # Validate total matches sum of items (allowing for small float precision differences)
+        if abs(total - items_total) > 0.01:
             raise HTTPException(
                 status_code=400, 
                 detail="The receipt is invalid."
@@ -139,8 +139,9 @@ async def process_receipt(receipt: Receipt):
         )
 
 
-# get_points: returns the points for a receipt
+# get_points is an endpoint that returns the points for a receipt
 # It takes a receipt ID as input and returns a dictionary with the points
+# The receipt ID is used to retrieve the points from the receipts_db dictionary
 @app.get("/receipts/{id}/points")
 async def get_points(id: str):
     # Check if the receipt ID is in the receipts_db dictionary
