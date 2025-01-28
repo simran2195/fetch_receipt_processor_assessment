@@ -1,11 +1,10 @@
-# fastapi to create and manage the web service
+# FastAPI to create and manage the web service
 # HTTPException to handle errors
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-# Bydantic BaseModel to define the data models and validate the data
-# Field to add metadata like description, default value, etc.
+# Pydantic BaseModel to define the data models and validate the data
 from pydantic import BaseModel, Field
 
 # List to define a list of items for fields in Pydantic models.
@@ -14,10 +13,7 @@ from typing import List
 # uuid to generate unique IDs for receipts
 from uuid import uuid4
 
-# datetime to handle date and time parsing and formatting
 from datetime import datetime
-
-# math to perform mathematical operations like rounding up, ceil
 import math
 
 app = FastAPI()
@@ -65,10 +61,8 @@ class Receipt(BaseModel):
         pattern=r"^\d+\.\d{2}$"
     )
 
-# Helper functions
-# calculate_points is a function that calculates the points for a receipt
-# It takes a Receipt object as input and returns an integer representing the points
-# async def means that the function is asynchronous and can be used with await
+# calculate_points takes a Receipt object as input and returns an integer representing the points
+# async def: function is asynchronous and can be used with await
 async def calculate_points(receipt: Receipt) -> int:
     points = 0
 
@@ -104,14 +98,9 @@ async def calculate_points(receipt: Receipt) -> int:
 
     return points
 
-# Endpoints
 
-# process_receipt is an endpoint that processes a receipt and returns the receipt ID
+# process_receipt: processes a receipt and returns the receipt ID
 # It takes a Receipt object as input and returns a dictionary with the receipt ID
-# The Receipt object is validated using the Receipt model
-
-# The points are calculated using the calculate_points function
-# The points are stored in the receipts_db dictionary with the receipt ID as the key
 @app.post("/receipts/process")
 async def process_receipt(receipt: Receipt):
     try:
@@ -125,8 +114,8 @@ async def process_receipt(receipt: Receipt):
         total = float(receipt.total)
         items_total = sum(float(item.price) for item in receipt.items)
         
-        # Validate total matches sum of items (allowing for small float precision differences)
-        if abs(total - items_total) > 0.01:
+        # Validate total matches sum of items 
+        if abs(total - items_total) != 0.00:
             raise HTTPException(
                 status_code=400, 
                 detail="The receipt is invalid."
@@ -150,9 +139,8 @@ async def process_receipt(receipt: Receipt):
         )
 
 
-# get_points is an endpoint that returns the points for a receipt
+# get_points: returns the points for a receipt
 # It takes a receipt ID as input and returns a dictionary with the points
-# The receipt ID is used to retrieve the points from the receipts_db dictionary
 @app.get("/receipts/{id}/points")
 async def get_points(id: str):
     # Check if the receipt ID is in the receipts_db dictionary

@@ -14,43 +14,14 @@ A web service built with FastAPI that processes retail receipts and awards point
 
 Points are awarded based on the following criteria:
 
-1. **Retailer Name**: One point for every alphanumeric character in the retailer name.
-2. **Round Dollar Amount**: 50 points if the total is a round dollar amount with no cents.
-3. **Quarter Multiple**: 25 points if the total is a multiple of 0.25.
-4. **Item Count**: 5 points for every two items on the receipt.
-5. **Item Description**: If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer.
-6. **Total Amount**: 5 points if the total is greater than $10.00.
-7. **Purchase Date**: 6 points if the day in the purchase date is odd.
-8. **Purchase Time**: 10 points if the time of purchase is between 2:00 PM and 4:00 PM.
+1. One point for every alphanumeric character in the retailer name.
+2. 50 points if the total is a round dollar amount with no cents.
+3. 25 points if the total is a multiple of 0.25.
+4. 5 points for every two items on the receipt.
+5. If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer.
+6. 6 points if the day in the purchase date is odd.
+7. 10 points if the time of purchase is between 2:00 PM and 4:00 PM.
 
----
-
-## **Data Models**
-
-The API uses Pydantic models for data validation and serialization:
-
-### Receipt Model
-```python
-class Receipt(BaseModel):
-    retailer: str           # Retailer name (alphanumeric, spaces, -, & only)
-    purchaseDate: str       # Date in YYYY-MM-DD format
-    purchaseTime: str       # Time in HH:MM 24 hour format
-    items: List[Item]       # List of purchased items (min 1 item)
-    total: str             # Total amount in USD (format: XX.XX$ - decimal with 2 places)
-```
-
-### Item Model
-```python
-class Item(BaseModel):
-    shortDescription: str   # Item description (alphanumeric, spaces, and hyphens only)
-    price: str             # Price in USD (format: XX.XX$ - decimal with 2 places)
-```
-
-These models ensure:
-- All required fields are present
-- Data formats are correct (dates, times, prices)
-- String patterns match expected formats
-- At least one item is included in each receipt
 
 ---
 
@@ -118,6 +89,34 @@ These models ensure:
 ```bash
 GET /receipts/7fb1377b-b223-49d9-a31a-5a02701dd310/points
 ```
+---
+
+## **Data Models**
+
+The API uses Pydantic models for data validation and serialization:
+
+### Receipt Model
+```python
+class Receipt(BaseModel):
+    retailer: str           # Retailer name (alphanumeric, spaces, -, & only)
+    purchaseDate: str       # Date in YYYY-MM-DD format
+    purchaseTime: str       # Time in HH:MM 24 hour format
+    items: List[Item]       # List of purchased items (min 1 item)
+    total: str             # Total amount in USD (format: XX.XX$ - decimal with 2 places)
+```
+
+### Item Model
+```python
+class Item(BaseModel):
+    shortDescription: str   # Item description (alphanumeric, spaces, and hyphens only)
+    price: str             # Price in USD (format: XX.XX$ - decimal with 2 places)
+```
+
+These models ensure:
+- All required fields are present
+- Data formats are correct (dates, times, prices)
+- String patterns match expected formats
+- At least one item is included in each receipt
 
 ---
 
