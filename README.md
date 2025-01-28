@@ -149,7 +149,14 @@ The API will be available at `http://localhost:8000/docs` for testing.
   2. Visit [`http://localhost:8000/docs`](http://localhost:8000/docs) in your browser.
   3. Test the endpoints directly from the Swagger UI:
      - Submit receipts via the **POST** endpoint.
+        ![POST demo1](images/demo1.png)
+
+
+
+        Receipt is processed and a unique ID is returned.
+        ![POST demo2](images/demo2.png)
      - Use the generated receipt ID to query the **GET** endpoint for points.
+        ![GET demo](images/demo3.png)
 
     <!-- ![Receipt Processing API Demo](videos/demo1.gif) -->
 ---
